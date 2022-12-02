@@ -1,0 +1,28 @@
+# %%
+import pandas as pd 
+
+# %% [markdown]
+# ![purple-divider](https://user-images.githubusercontent.com/7065401/52071927-c1cd7100-2562-11e9-908a-dde91ba14e59.png)
+# #### Set the displayed rows to max
+
+# %%
+pd.set_option('display.max_rows', None)
+pd.set_option('display.max_columns', None)
+
+# %% [markdown]
+# ![purple-divider](https://user-images.githubusercontent.com/7065401/52071927-c1cd7100-2562-11e9-908a-dde91ba14e59.png)
+# #### read the file
+
+# %%
+df = pd.read_excel("_testdaten/SKA_Stadt_test.xlsx")
+
+# %% [markdown]
+# ![purple-divider](https://user-images.githubusercontent.com/7065401/52071927-c1cd7100-2562-11e9-908a-dde91ba14e59.png)
+# > **filter for Workflowschritt and ZählerNr**
+
+# %%
+# df.loc[(df["ZählerNr"].notnull())].count()
+# len(df.loc[(df["Workflowschritt"] == "abgeschlossen") & (df["ZählerNr"].notnull())])
+print(df.loc[(df["Workflowschritt"] == "abgeschlossen") & (df["ZählerNr"].notnull())])
+
+
