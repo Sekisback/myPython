@@ -46,8 +46,8 @@ class GUI(customtkinter.CTk):
         self.treeview.place(x=30, y=90, width=440, height=570)
         # Treeview Columns
         self.treeview.column('#0', minwidth=10, width=10, stretch=NO)
-        self.treeview.column("key", minwidth=250, width=250, stretch=NO)
-        self.treeview.column("value", minwidth=230, width=230, stretch=NO)
+        self.treeview.column("key", minwidth=230, width=230, stretch=NO)
+        self.treeview.column("value", minwidth=200, width=200, stretch=NO)
 
 
 def open_dialog():
@@ -64,7 +64,7 @@ def open_dialog():
 def show_results(results):
     for index, (key, value) in enumerate(results.items()):
         window.treeview.insert(
-            "", index=index, iid=index, text="", values=(key, value))
+            "", tk.END, iid=index, text="", values=(key, value))
 
 
 if __name__ == "__main__":
