@@ -7,10 +7,7 @@ import pandas as pd
 customer = ["--- Kunden wählen ---", "SKA", "ZVO", "STD", "SWQ", "BBS", "SWNO",
             "TOR"]
 
-results = {"": "", "Datensatz": "SKA_Export_GAS",
-           "Anzahl Daten": 167,
-           "Anzahl X": 150,
-           "Anzahl Y": 100}
+results = {}
 
 
 class GUI(customtkinter.CTk):
@@ -51,17 +48,43 @@ class GUI(customtkinter.CTk):
 
 
 def open_dialog():
+    # Clear results
+    results.clear()
+
+    # Clear treeview
+    window.treeview.delete(*window.treeview.get_children())
+
+    # load adms export
     try:
         file = filedialog.askopenfilename(
             title="Export laden...", filetypes=(("Excel Datei", ".xlsx .xls"),
                                                 ("Alle Dateien", "*.*")))
+        global df
         df = pd.read_excel(file)
-        show_results(results)
+        template()
     except Exception as e:
         messagebox.showerror("Woah!", f"Da ist ein Problem aufgetreten {e}")
 
 
-def show_results(results):
+def template():
+    count_data()
+    # TODO You are here
+    selection = str(window.combobox.get())
+    if selection.startswith(("SKA", "ZVO")):
+        print("ZVO or SKA")
+    else:
+        print("Other AG")
+
+    show_results()
+
+
+def count_data():
+    # Make first Row empty
+    results[""] = ""
+    results["Anzahl Datensätze"] = (len(df))
+
+
+def show_results():
     for index, (key, value) in enumerate(results.items()):
         window.treeview.insert(
             "", tk.END, iid=index, text="", values=(key, value))
