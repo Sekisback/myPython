@@ -16,7 +16,7 @@ class GUI(customtkinter.CTk):
 
     def __init__(self):
         super().__init__()
-        self.geometry("500x700")
+        self.geometry("500x690")
         self.resizable(0, 0)
         self.title("Abrechnungsanalyse")
         self.icon = tk.PhotoImage(file="image/abrechnung.png")
@@ -34,13 +34,13 @@ class GUI(customtkinter.CTk):
         self.button.place(x=300, y=20, width=180)
 
         # Frame
-        self.frame = Frame(self, borderwidth=0, bg="white", relief="ridge")
-        self.frame.place(x=20, y=70, width=460, height=610)
+        self.frame = Frame(self, borderwidth=0, bg="#395E9C", relief="ridge")
+        self.frame.place(x=20, y=70, width=460, height=600)
 
         # Treeview
         self.treeview = ttk.Treeview(
             self, columns=("key", "value"), show="tree")
-        self.treeview.place(x=30, y=90, width=440, height=570)
+        self.treeview.place(x=30, y=80, width=440, height=580)
         # Treeview Columns
         self.treeview.column('#0', minwidth=10, width=10, stretch=NO)
         self.treeview.column("key", minwidth=230, width=230, stretch=NO)
