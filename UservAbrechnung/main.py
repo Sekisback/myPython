@@ -10,6 +10,7 @@ customer = ["--- Kunden wählen ---", "SKA", "ZVO", "STD", "SWQ", "BBS", "SWNO",
 results = {}
 
 
+# ------------------------------------ GUI -----------------------------------
 class GUI(customtkinter.CTk):
     customtkinter.set_appearance_mode("dark")
     customtkinter.set_default_color_theme("dark-blue")
@@ -46,6 +47,8 @@ class GUI(customtkinter.CTk):
         self.treeview.column("key", minwidth=230, width=230, stretch=NO)
         self.treeview.column("value", minwidth=200, width=200, stretch=NO)
 
+# ----------------------------------- PANDAS ----------------------------------
+
 
 def open_dialog():
     # Clear results
@@ -67,24 +70,58 @@ def open_dialog():
 
 
 def template():
-    count_data()
-    # TODO You are here
     selection = str(window.combobox.get())
+
+    # Normal Customer
     if selection.startswith(("SKA", "ZVO")):
-        print("ZVO or SKA")
-    else:
-        print("Other AG")
+        empty_row()
+        periode()
+        count_data()
+    # Foreign System
+    elif selection.startswith(("BBS", "SWQ")):
+        empty_row()
+        periode()
+        foreign()
+    # Other
+    elif selection.startswith(("STD", "SWNO")):
+        empty_row()
+        periode()
+        other()
 
     show_results()
 
 
-def count_data():
+def empty_row():
     # Make first Row empty
     results[""] = ""
+
+
+def periode():
+    # Get minimum date
+    date_start = df["Einbaudatum"].min().strftime("%d.%m.")
+    # Get maximum date
+    date_end = df["Einbaudatum"].max().strftime("%d.%m.%Y")
+    # write into results
+    results["Abrechnungszeitraum"] = (
+            f"{date_start} - {date_end}")
+
+
+def foreign():
+    # results["Foreign"] = "this is foreign"
+    pass
+
+
+def other():
+    # results["Other"] = "this is other"
+    pass
+
+def count_data():
+    # read dataquantity and write into results
     results["Anzahl Datensätze"] = (len(df))
 
 
 def show_results():
+    # Read the values from the results and show them into treeview
     for index, (key, value) in enumerate(results.items()):
         window.treeview.insert(
             "", tk.END, iid=index, text="", values=(key, value))
