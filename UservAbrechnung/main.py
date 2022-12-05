@@ -3,11 +3,42 @@ from tkinter import ttk, filedialog, messagebox
 import tkinter as tk
 import customtkinter
 import pandas as pd
+import sys
+import os
 
-customer = ["--- Kunden wählen ---", "SKA", "ZVO", "STD", "SWQ", "BBS", "SWNO",
-            "TOR"]
+# pyinstaller
+# C:\Users\skornber\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\Scripts\pyinstaller.exe
+# C:\Users\skornber\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\Scripts\auto-py-to-exe
 
+
+customers = ["--- Kunden wählen ---", "SKA", "ZVO", "STD", "SWQ", "BBS", "SWNO",
+             "TOR"]
+
+workflows = ["Transfer AG",
+             "Transfer an AG",
+             "abgeschlossen"]
+
+abort_codes = ["2000 - techn. Mangel",
+               "2419 - falsche Verbraucherdaten",
+               "2412 - Technischer Mangel",
+               "2436 - Fehlanfahrt",
+               "2407 - Wechsel nicht möglich",
+               "2401 - Zähler bereits gewechselt",
+               "2011 - Versorgerventil",
+               "2004 - TW nicht mögl",
+               "2003 - Zutritt verweigert",
+               "2002 - falsche Verbraucherdaten",
+               "2001 - Leerstand",
+               "147 - Covid 19 Abbruch",
+               "138 - Zähler bereits gewechselt",
+               "124 - Langzeiturlaub",
+               "123 - Leerstand",
+               "116 - Zähler n. auffindbar",
+               "112 - Haus abgerissen"
+               ]
 results = {}
+
+save = True
 
 
 # ------------------------------------ GUI -----------------------------------
@@ -26,7 +57,7 @@ class GUI(customtkinter.CTk):
     def widgets(self):
         # Combobox
         self.combobox = customtkinter.CTkComboBox(
-            self, width=200, fg_color="#395E9C", values=sorted(customer))
+            self, width=200, fg_color="#395E9C", values=sorted(customers))
         self.combobox.place(x=20, y=20, width=260)
 
         # Button
@@ -64,31 +95,45 @@ def open_dialog():
                                                 ("Alle Dateien", "*.*")))
         global df
         df = pd.read_excel(file)
+
+        get_file_path(file)
+        get_file_name(file)
+
         template()
     except Exception as e:
         messagebox.showerror("Woah!", f"Da ist ein Problem aufgetreten {e}")
 
 
 def template():
-    selection = str(window.combobox.get())
+    # Common query's
+    empty_row()
+    periode()
+    count_data()
 
+    # Read customer from Combobox
+    selection = str(window.combobox.get())
     # Normal Customer
     if selection.startswith(("SKA", "ZVO")):
-        empty_row()
-        periode()
-        count_data()
+        finished()
     # Foreign System
     elif selection.startswith(("BBS", "SWQ")):
-        empty_row()
-        periode()
         foreign()
     # Other
     elif selection.startswith(("STD", "SWNO")):
-        empty_row()
-        periode()
         other()
 
+    # Display results
     show_results()
+
+
+def get_file_path(file):
+    global path
+    path = os.path.dirname(file)
+
+
+def get_file_name(file):
+    global filename
+    filename = os.path.basename(file).split(".")[0]
 
 
 def empty_row():
@@ -106,6 +151,18 @@ def periode():
             f"{date_start} - {date_end}")
 
 
+def finished():
+    # hide lines with empty values
+    finished = df[
+        (df["ZählerNr"].notnull()) &
+        (df["Workflowschritt"].isin(workflows))]
+
+    results["Abgeschlossen"] = len(finished)
+
+    extension = ("_abgeschlossene_Aufträge")
+    write_results(finished, extension)
+
+
 def foreign():
     # results["Foreign"] = "this is foreign"
     pass
@@ -114,6 +171,7 @@ def foreign():
 def other():
     # results["Other"] = "this is other"
     pass
+
 
 def count_data():
     # read dataquantity and write into results
@@ -125,6 +183,12 @@ def show_results():
     for index, (key, value) in enumerate(results.items()):
         window.treeview.insert(
             "", tk.END, iid=index, text="", values=(key, value))
+
+
+def write_results(data, extension):
+    # Write excel file without index
+    if (save):
+        data.to_excel(path + "/" + filename + extension + ".xlsx", index=False)
 
 
 if __name__ == "__main__":
