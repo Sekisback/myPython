@@ -6,7 +6,7 @@ import pandas as pd
 import sys
 import os
 
-# pyinstaller
+# ! pyinstaller
 # C:\Users\skornber\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\Scripts\pyinstaller.exe
 # C:\Users\skornber\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\Scripts\auto-py-to-exe
 
@@ -14,12 +14,12 @@ import os
 customers = []
 # first dropdown selection
 cus_0 = ["--- Kunden wählen ---"]
-# ! normal invoice customer
+# normal invoice customer
 cus_1 = ["SKA", "ZVO", "STD", "TOR", "SWQ", "BBS", "KAKI", "EWS", "GEW", "OHS",
          "SWNO", "SNF", "SSN", "SNY"]
-# ! foreign system customer
+# foreign system customer
 cus_2 = ["EMD", "SWN"]
-# !other customer
+# other customer
 cus_3 = ["SHH"]
 
 workflows = ["Transfer AG",
