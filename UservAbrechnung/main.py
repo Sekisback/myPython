@@ -157,7 +157,6 @@ def template():
         other()
 
     # Display results
-    print(results)
     show_results()
 
 
@@ -246,6 +245,8 @@ def meter_size():
                (df["ZählerNr"].notnull())], columns=["Zählergröße"])
     results.update(
         m_size["Zählergröße"].value_counts().sort_index().to_dict())
+
+    print(m_size)
 
 
 def foreign():
